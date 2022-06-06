@@ -110,5 +110,31 @@ public class spoonacularTest extends AbstractTest {
 
 
     }
+    @Test
+    void mealPlanTest() {
+        given()
+                .body("{\n"
+                        + "\"username\": \"BaykovaES\", \n"
+                        + "\"firstName\": \"Evgeniya\",\n"
+                        + "\"lastName\": \"Baykova\",\n"
+                        + "\"email\": \"tathar@mail.ru\", \n"
+                        + "}")
+                .when()
+                .request(Method.POST, getBaseUrl() + "users/connect" +
+                        "apiKey={apiKey}", getApiKey())
+                .then()
+                .statusCode(200)
+                .assertThat()
+                .body("username", hasItems("baykovaes"));
 
+        given()
+                .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
+                .queryParam("apiKey", getApiKey())
+                .queryParam("username", "baykovaes")
+                .queryParam("start-date", "2022-06-06")
+                .when()
+                .request(Method.GET,getBaseUrl()+"/mealplanner/generate?" , getApiKey())
+                .then()
+                .statusCode(200);
+    }
 }
