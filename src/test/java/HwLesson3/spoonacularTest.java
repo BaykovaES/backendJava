@@ -131,9 +131,29 @@ public class spoonacularTest extends AbstractTest {
                 .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
                 .queryParam("apiKey", getApiKey())
                 .queryParam("username", "baykovaes")
-                .queryParam("start-date", "2022-06-06")
+                .body("{\n"
+                        +"\"item\": \"1 package baking powder\",\n"
+                        +"\"aisle\": \"Baking\",\n"
+                        +"\"parse\": true , \n"
+                        +"}")
                 .when()
-                .request(Method.GET,getBaseUrl()+"/mealplanner/generate?" , getApiKey())
+                .request(Method.POST,getBaseUrl()+"/mealplanner/baykovaes/shopping-list/items" , getApiKey())
+                .then()
+                .statusCode(200);
+        given()
+                .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
+                .queryParam("apiKey", getApiKey())
+
+                .when()
+                .request(Method.GET,getBaseUrl()+"/mealplanner/baykovaes/shopping-list" , getApiKey())
+                .then()
+                .statusCode(200);
+
+        given()
+                .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
+                .queryParam("apiKey", getApiKey())
+                .when()
+                .request(Method.DELETE,getBaseUrl()+"/mealplanner/baykovaes/shopping-list" , getApiKey())
                 .then()
                 .statusCode(200);
     }
