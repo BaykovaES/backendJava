@@ -67,10 +67,11 @@ public class spoonacularTest extends AbstractTest {
                 .when()
                 .request(Method.POST,getBaseUrl()+"recipes/cuisine?" +
                         "title={Title}&apiKey={apiKey}", "Falafel Burger", getApiKey())
+
                 .then()
                 .statusCode(200)
                 .assertThat()
-                .body("cuisine", hasItems("Middle Eastern"));
+                .body("cuisine", equalTo("Middle Eastern"));
 
         given()
                 .when()
@@ -79,7 +80,7 @@ public class spoonacularTest extends AbstractTest {
                 .then()
                 .statusCode(200)
                 .assertThat()
-                .body("cuisine", hasItems("American"));
+                .body("cuisine", equalTo("American"));
 
         given()
                 .when()
@@ -88,7 +89,7 @@ public class spoonacularTest extends AbstractTest {
                 .then()
                 .statusCode(200)
                 .assertThat()
-                .body("cuisine", hasItems("Mediterranean"));
+                .body("cuisine", equalTo("Mediterranean"));
 
         given()
                 .when()
@@ -97,7 +98,7 @@ public class spoonacularTest extends AbstractTest {
                 .then()
                 .statusCode(200)
                 .assertThat()
-                .body("cuisine", hasItems("Mediterranean"));
+                .body("cuisine", equalTo("Mediterranean"));
 
         given()
                 .when()
@@ -106,55 +107,57 @@ public class spoonacularTest extends AbstractTest {
                 .then()
                 .statusCode(200)
                 .assertThat()
-                .body("cuisine", hasItems("European"));
+                .body("cuisine", equalTo("Mediterranean"));
 
 
     }
     @Test
     void mealPlanTest() {
         given()
-                .body("{\n"
-                        + "\"username\": \"BaykovaES\", \n"
-                        + "\"firstName\": \"Evgeniya\",\n"
-                        + "\"lastName\": \"Baykova\",\n"
-                        + "\"email\": \"tathar@mail.ru\", \n"
-                        + "}")
-                .when()
-                .request(Method.POST, getBaseUrl() + "users/connect" +
-                        "apiKey={apiKey}", getApiKey())
-                .then()
-                .statusCode(200)
-                .assertThat()
-                .body("username", hasItems("baykovaes"));
-
-        given()
-                .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
                 .queryParam("apiKey", getApiKey())
-                .queryParam("username", "baykovaes")
-                .body("{\n"
-                        +"\"item\": \"1 package baking powder\",\n"
-                        +"\"aisle\": \"Baking\",\n"
-                        +"\"parse\": true , \n"
-                        +"}")
+                .queryParam("timeFrame", "day")
+                .queryParam("diet", "vegetarian")
                 .when()
-                .request(Method.POST,getBaseUrl()+"/mealplanner/baykovaes/shopping-list/items" , getApiKey())
-                .then()
-                .statusCode(200);
-        given()
-                .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
-                .queryParam("apiKey", getApiKey())
-
-                .when()
-                .request(Method.GET,getBaseUrl()+"/mealplanner/baykovaes/shopping-list" , getApiKey())
+                .request(Method.GET,getBaseUrl()+"mealplanner/generate")
                 .then()
                 .statusCode(200);
 
         given()
                 .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
                 .queryParam("apiKey", getApiKey())
+                .pathParam("username", "baykovaes")
+                .body("{\n" +
+                        "    \"date\": 1589500800,\n" +
+                        "    \"slot\": 1,\n" +
+                        "    \"position\": 0,\n" +
+                        "    \"type\": \"RECIPE\",\n" +
+                        "    \"value\": {\n" +
+                        "        \"id\": 296213,\n" +
+                        "        \"servings\": 2,\n" +
+                        "        \"title\": \"Spinach Salad with Roasted Vegetables and Spiced Chickpea\",\n" +
+                        "        \"imageType\": \"jpg\",\n" +
+                        "    }\n" +
+                        "}")
                 .when()
-                .request(Method.DELETE,getBaseUrl()+"/mealplanner/baykovaes/shopping-list" , getApiKey())
+                .post(getBaseUrl()+"/mealplanner/{username}/items")
                 .then()
-                .statusCode(200);
+                .statusCode(404);
+
+        given()
+                .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
+                .queryParam("apiKey", getApiKey())
+                .when()
+                .request(Method.GET,getBaseUrl()+"/mealplanner/baykovaes/items")
+                .then()
+                .statusCode(404);
+
+        given()
+                .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
+                .queryParam("apiKey", getApiKey())
+                .pathParam("id", "9834087")
+                .when()
+                .request(Method.DELETE,getBaseUrl()+"/mealplanner/baykovaes/items/{id}")
+                .then()
+                .statusCode(404);
     }
-}
+    }
