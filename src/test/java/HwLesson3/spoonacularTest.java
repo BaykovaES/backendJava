@@ -138,26 +138,20 @@ public class spoonacularTest extends AbstractTest {
                         "        \"imageType\": \"jpg\",\n" +
                         "    }\n" +
                         "}")
-                .when()
-                .post(getBaseUrl()+"/mealplanner/{username}/items")
-                .then()
-                .statusCode(404);
 
-        given()
-                .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
-                .queryParam("apiKey", getApiKey())
                 .when()
-                .request(Method.GET,getBaseUrl()+"/mealplanner/baykovaes/items")
+                .post("https://api.spoonacular.com/mealplanner/{username}/items")
                 .then()
-                .statusCode(404);
+                .statusCode(200);
+
 
         given()
                 .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
                 .queryParam("apiKey", getApiKey())
                 .pathParam("id", "9834087")
                 .when()
-                .request(Method.DELETE,getBaseUrl()+"/mealplanner/baykovaes/items/{id}")
+                .delete("https://api.spoonacular.com/mealplanner/baykovaes/items/{id}")
                 .then()
-                .statusCode(404);
+                .statusCode(200);
     }
     }
