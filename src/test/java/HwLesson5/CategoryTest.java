@@ -1,4 +1,4 @@
-package HwLesson6;
+package HwLesson5;
 
 import HWLesson5.RetrofitUtils;
 import HWLesson5.api.CategoryService;
