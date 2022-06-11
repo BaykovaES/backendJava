@@ -122,7 +122,7 @@ public class spoonacularTest extends AbstractTest {
                 .then()
                 .statusCode(200);
 
-        given()
+        String id = given()
                 .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
                 .queryParam("apiKey", getApiKey())
                 .pathParam("username", "baykovaes")
@@ -142,13 +142,18 @@ public class spoonacularTest extends AbstractTest {
                 .when()
                 .post("https://api.spoonacular.com/mealplanner/{username}/items")
                 .then()
-                .statusCode(200);
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .get("id")
+                .toString();
+
 
 
         given()
                 .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
                 .queryParam("apiKey", getApiKey())
-                .pathParam("id", "9834087")
+                .pathParam("id", id)
                 .when()
                 .delete("https://api.spoonacular.com/mealplanner/baykovaes/items/{id}")
                 .then()
