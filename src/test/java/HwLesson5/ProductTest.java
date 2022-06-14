@@ -84,8 +84,7 @@ public class ProductTest {
         Response<Product> response1 = productService.getProductById(id)
                 .execute();
         assertThat(response1.isSuccessful(), CoreMatchers.is(true));
-        assertThat(response1.code(), Matchers.is(200));
-
+        assertThat(response1.body().getTitle(),Matchers.is("Cherry") );
 
         product = new Product()
                 .withId(id)
@@ -100,7 +99,7 @@ public class ProductTest {
         Response<Product> response3 = productService.getProductById(id)
                 .execute();
         assertThat(response3.isSuccessful(), CoreMatchers.is(true));
-        assertThat(response3.code(), Matchers.is(200));
+        assertThat(response3.body().getTitle(),Matchers.is("Apple"));
 
         Response<ResponseBody> response4 = productService.deleteProduct(id).execute();
         assertThat(response4.isSuccessful(), CoreMatchers.is(true));
