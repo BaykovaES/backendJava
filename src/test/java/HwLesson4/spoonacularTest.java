@@ -141,4 +141,41 @@ public class spoonacularTest extends AbstractTest {
                 .delete("https://api.spoonacular.com/mealplanner/baykovaes/items/{id}")
                 .then();
     }
+
+    @Test
+    void ShoppingListTest() {
+        String id = given()
+                .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
+                .pathParam("username", "baykovaes")
+                .body("{\n"+
+                        "\"item\": \"1 package baking powder\",\n"+
+                "\"aisle\": \"Baking\",\n" +
+                "}")
+
+                .when()
+                .post("https://api.spoonacular.com/mealplanner/{username}/shopping-list/items")
+                .then()
+                .extract()
+                .jsonPath()
+                .get("id")
+                .toString();
+
+
+        given()
+                .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
+                .pathParam("username", "baykovaes")
+
+                .when()
+                .get("https://api.spoonacular.com/mealplanner/{username}/shopping-list")
+                .then();
+
+
+        given()
+                .queryParam("hash", "c09631a23625faeb81821521f41c6108a838314a")
+                .pathParam("username", "baykovaes")
+                .pathParam("id", id)
+                .when()
+                .delete("https://api.spoonacular.com/mealplanner/{username}/shopping-list/items/{id}")
+                .then();
+    }
     }
